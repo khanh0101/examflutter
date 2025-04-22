@@ -1,0 +1,154 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const ThucHanhApp());
+}
+
+class ThucHanhApp extends StatelessWidget {
+  const ThucHanhApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Thực hành 01',
+      debugShowCheckedModeBanner: false,
+      home: const ThucHanhScreen(),
+    );
+  }
+}
+
+class ThucHanhScreen extends StatefulWidget {
+  const ThucHanhScreen({super.key});
+
+  @override
+  State<ThucHanhScreen> createState() => _ThucHanhScreenState();
+}
+
+class _ThucHanhScreenState extends State<ThucHanhScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+
+  void _kiemTraNguoi() {
+    String ten = nameController.text.trim();
+    int? tuoi = int.tryParse(ageController.text.trim());
+
+    if (ten.isEmpty || tuoi == null) {
+      _showDialog('Lỗi', 'Vui lòng nhập tên và tuổi hợp lệ.');
+      return;
+    }
+
+    String phanLoai;
+
+    if (tuoi > 65) {
+      phanLoai = 'Người già';
+    } else if (tuoi >= 6) {
+      phanLoai = 'Người lớn';
+    } else if (tuoi > 2) {
+      phanLoai = 'Trẻ em';
+    } else {
+      phanLoai = 'Em bé';
+    }
+
+    _showDialog(
+      'Kết quả',
+      'Họ và tên: $ten\nTuổi: $tuoi\nPhân loại: $phanLoai',
+    );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                child: const Text('Đóng'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'THỰC HÀNH 01',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.symmetric(horizontal: 30),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(flex: 2, child: Text('Họ và tên')),
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        const Expanded(flex: 2, child: Text('Tuổi')),
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: ageController,
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _kiemTraNguoi,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 12,
+                  ),
+                ),
+                child: const Text(
+                  'Kiểm tra',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
