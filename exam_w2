@@ -1,0 +1,128 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const LibraryApp());
+}
+
+class LibraryApp extends StatelessWidget {
+  const LibraryApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Quản lý Thư viện',
+      debugShowCheckedModeBanner: false,
+      home: const LibraryHomePage(),
+    );
+  }
+}
+
+class LibraryHomePage extends StatefulWidget {
+  const LibraryHomePage({super.key});
+
+  @override
+  State<LibraryHomePage> createState() => _LibraryHomePageState();
+}
+
+class _LibraryHomePageState extends State<LibraryHomePage> {
+  final TextEditingController _staffController = TextEditingController(
+    text: 'Nguyen Van A',
+  );
+
+  final List<Map<String, dynamic>> _books = [
+    {'title': 'Sách 01', 'checked': false},
+    {'title': 'Sách 02', 'checked': false},
+  ];
+
+  void _addBook() {
+    setState(() {
+      _books.add({'title': 'Sách ${_books.length + 1}', 'checked': false});
+    });
+  }
+
+  int _selectedIndex = 0;
+
+  void _onBottomNavTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    // Bạn có thể điều hướng trang thật tại đây nếu muốn mở rộng app
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Hệ thống Quản lý Thư viện'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Nhân viên
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _staffController,
+                    decoration: const InputDecoration(
+                      labelText: 'Nhân viên',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    // Tùy chọn xử lý đổi nhân viên
+                  },
+                  child: const Text('Đổi'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Danh sách sách
+            const Text(
+              'Danh sách sách',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _books.length,
+                itemBuilder: (context, index) {
+                  return CheckboxListTile(
+                    title: Text(_books[index]['title']),
+                    value: _books[index]['checked'],
+                    onChanged: (value) {
+                      setState(() {
+                        _books[index]['checked'] = value;
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+
+            // Nút thêm
+            ElevatedButton(onPressed: _addBook, child: const Text('Thêm')),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onBottomNavTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Quản lý'),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Sách'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Người dùng',
+          ),
+        ],
+      ),
+    );
+  }
+}
