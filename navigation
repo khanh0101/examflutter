@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+// --- MyApp ---
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Navigation Demo',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      debugShowCheckedModeBanner: false,
+      home: const WelcomeScreen(),
+    );
+  }
+}
+
+// --- Welcome Screen ---
+class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.widgets, size: 100, color: Colors.blue),
+              const SizedBox(height: 20),
+              const Text(
+                'Jetpack Compose',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Jetpack Compose is a modern UI toolkit for building native Android apps.',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ComponentListScreen()),
+                  );
+                },
+                child: const Text("I'm ready"),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// --- Component List Screen ---
+class ComponentListScreen extends StatelessWidget {
+  const ComponentListScreen({super.key});
+
+  final List<Map<String, String>> components = const [
+    {'title': 'Text', 'description': 'Displays text'},
+    {'title': 'Image', 'description': 'Displays an image'},
+    {'title': 'TextField', 'description': 'Input field for text'},
+    {'title': 'PasswordField', 'description': 'Input field for passwords'},
+    {'title': 'Column', 'description': 'Arranges elements vertically'},
+    {'title': 'Row', 'description': 'Arranges elements horizontally'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('UI Components List')),
+      body: ListView.builder(
+        itemCount: components.length,
+        itemBuilder: (context, index) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            child: ListTile(
+              title: Text(components[index]['title']!,
+                  style: const TextStyle(color: Colors.cyan, fontWeight: FontWeight.bold)),
+              subtitle: Text(components[index]['description']!),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ComponentDetailScreen(title: components[index]['title']!),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// --- Component Detail Screen ---
+class ComponentDetailScreen extends StatelessWidget {
+  final String title;
+
+  const ComponentDetailScreen({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('$title Detail')),
+      body: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24.0),
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: 'The ', style: TextStyle(fontSize: 20)),
+                TextSpan(
+                    text: 'quick ', style: TextStyle(decoration: TextDecoration.lineThrough)),
+                TextSpan(text: 'Brown', style: TextStyle(color: Colors.brown, fontSize: 22)),
+                TextSpan(text: ' fox j u m p s '),
+                TextSpan(
+                    text: 'over ',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                TextSpan(
+                    text: 'the ',
+                    style: TextStyle(decoration: TextDecoration.underline, fontSize: 18)),
+                TextSpan(text: 'lazy dog.', style: TextStyle(fontStyle: FontStyle.italic)),
+              ],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+}
